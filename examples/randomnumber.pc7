@@ -1,0 +1,23 @@
+CLEAR
+VAR SECRET_NUMBER RAND 1, 100  // Генерируем случайное число от 1 до 100
+VAR GUESS 0
+
+TEXT "Угадайте число от 1 до 100"
+
+FOR I = 1 TO 10  // Даем пользователю 10 попыток
+    INPUT GUESS
+    IF GUESS < SECRET_NUMBER
+        TEXT "Слишком низко!"
+    ENDIF
+    IF GUESS > SECRET_NUMBER
+        TEXT "Слишком высоко!"
+    ENDIF
+    IF GUESS == SECRET_NUMBER
+        TEXT "Поздравляем! Вы угадали число!"
+        END  // Завершаем программу, если число угадано
+    ENDIF
+NEXT
+
+TEXT "Вы исчерпали все попытки. Загаданное число было: "
+TEXT SECRET_NUMBER  // Показываем загаданное число
+END

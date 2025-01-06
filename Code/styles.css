@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    margin: 0;
+}
+
+#toolbar {
+    width: 200px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+#editor {
+    flex: 1;
+    display: flex;
+}
+
+#line-numbers {
+    width: 30px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    text-align: right;
+    border-right: 1px solid #ccc;
+}
+
+#code {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-family: Consolas, monospace;
+    resize: none;
+    height: 100%;
+}
+
+button {
+    margin: 5px 0;
+    width: 100%;
+}
