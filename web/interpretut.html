@@ -110,7 +110,8 @@
       <div class="segment topright"></div>
       <div class="segment middle"></div>
       <div class="segment bottomleft"></div>
-      <div class="segment bottomright"></ <div class="segment bottom"></div>
+      <div class="segment bottomright"></div>
+      <div class="segment bottom"></div>
     </div>
     <div class="indicator" id="display4">
       <div class="segment top"></div>
@@ -156,6 +157,8 @@
     <button class="button" onclick="appendNumber(0)">0</button>
     <button class="button" onclick="setOperator('/')">/</button>
     <button class="button" onclick="calculate()">=</button>
+    <button class="button" id="mPlusButton" onclick="toggleMPlus()">M+</button>
+    <button class="button" id="mMinusButton" onclick="toggleMMinus()">M-</button>
   </div>
   <script>
     let variables = {};
@@ -163,6 +166,12 @@
     let currentInput = '';
     let operator = '';
     let firstOperand = null;
+    let loopCounter = 0;
+    let loopEnd = 0;
+    let conditionStack = [];
+    let currentCondition = null;
+    let mPlusPressed = false;
+    let mMinusPressed = false;
 
     function executeCommand() {
       const command = document.getElementById('commandInput').value.trim();
@@ -190,22 +199,33 @@
           setTimeout(() => {}, parseInt(parts[1]));
           break;
         case 'IF':
-          // Условие
+          const condition = parts.slice(1).join(' ');
+          if (evalCondition(condition)) {
+            currentCondition = true;
+          } else {
+            currentCondition = false;
+          }
           break;
         case 'ENF':
-          // Завершение условия
+          currentCondition = null;
           break;
         case 'FOR':
-          // Цикл
+          loopCounter = parseInt(parts[1]);
+          loopEnd = parseInt(parts[3]);
           break;
         case 'NXT':
-          // Завершение цикла
+          if (loopCounter < loopEnd) {
+            loopCounter++;
+          } else {
+            loopCounter = 0; // Сбросить счетчик
+          }
           break;
         case 'END':
           // Точка выхода
           break;
         case 'RND':
-          // Генерация случайного числа
+          const randomValue = Math.floor(Math.random() * (parseInt(parts[1]) - parseInt(parts[2]) + 1)) + parseInt(parts[2]);
+          variables[parts[3]] = randomValue;
           break;
         case 'ARR':
           arrays[parts[1]] = new Array(parseInt(parts[2])).fill(0);
@@ -216,8 +236,11 @@
         case 'GAR':
           variables[parts[3]] = arrays[parts[1]][parseInt(parts[2])];
           break;
-        case 'K':
-          // Проверка нажатия кнопки
+        case 'K1':
+          variables[parts[1]] = mPlusPressed;
+          break;
+        case 'K2':
+          variables[parts[1]] = mMinusPressed;
           break;
         default:
           alert('Неизвестная команда');
@@ -237,6 +260,15 @@
         alert('Ошибка выполнения кода: ' + error.message);
       }
       updateDisplay();
+    }
+
+    function evalCondition(condition) {
+      try {
+        return eval(condition);
+      } catch (error) {
+        alert('Ошибка в условии: ' + error.message);
+        return false;
+      }
     }
 
     function updateDisplay() {
@@ -270,6 +302,8 @@
       firstOperand = null;
       variables = {};
       arrays = {};
+      mPlusPressed = false;
+      mMinusPressed = false;
       updateDisplay();
     }
 
@@ -311,6 +345,16 @@
         firstOperand = null;
         updateDisplay();
       }
+    }
+
+    function toggleMPlus() {
+      mPlusPressed = !mPlusPressed;
+      document.getElementById('mPlusButton').style.backgroundColor = mPlusPressed ? '#0f0' : '#444'; // Изменение цвета кнопки
+    }
+
+    function toggleMMinus() {
+      mMinusPressed = !mMinusPressed;
+      document.getElementById('mMinusButton').style.backgroundColor = mMinusPressed ? '#0f0' : '#444'; // Изменение цвета кнопки
     }
   </script>
 </body>
